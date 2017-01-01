@@ -1,6 +1,13 @@
 var http = require('http'),
 	fs = require('fs'),
-	url = require('url');
+	url = require('url'),
+	express = require('express'),
+	app = require('express')();
+
+app.use(express.static('src'));
+
+app.use('/', require('./router'));
+
 
 // 创建服务
 http.createServer(function (req, res){
@@ -17,9 +24,10 @@ http.createServer(function (req, res){
 			res.writeHead(404, {'Content-Type': 'text/plain'});
 		}else{
 
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.write(data);
+			res.writeHead(200, {'Content-Type': 'text/plain'});
+			res.write(data.toString());
 		}
+
 			
 		// 发送响应数据
 		res.end();
