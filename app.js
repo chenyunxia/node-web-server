@@ -1,5 +1,10 @@
-var	express = require('express'),
+var	http = require('http'),
+	express = require('express'),
 	app = require('express')();
+
+// setting listening port
+// var server = app.listen(8090);
+app.set('port', process.env.PORT || 8090);
 
 // 设置静态资源的目录
 app.use(express.static('public'));
@@ -15,10 +20,13 @@ app.get('/list', function(req, res){
 })
 
 
-// setting listening port
-var server = app.listen(8090);
-
+// createServer
+http.createServer(app).listen(app.get('port'), function(){  
+  console.log('listening: ' + app.get('port'));  
+});
 console.log('server running');
+
+
 // var server = app.listen(8090, function () {
 
 //     var host = server.address().address
