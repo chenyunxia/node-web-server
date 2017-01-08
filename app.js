@@ -1,9 +1,6 @@
 var	http = require('http'),
 	express = require('express'),
-	app = require('express')(),
-    path = require('path');
-
-var routes = require('./routers/router');
+	app = require('express')();
 
 
 // setting listening port
@@ -14,11 +11,6 @@ app.set('port', process.env.PORT || 9090);
 app.use(express.static('public'));
 // app.use(express.static('files'));
 
-
-// setting template path
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use('/', routes);
 
 // router list
 app.get('/list', function(req, res){
@@ -35,12 +27,3 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('listening: ' + app.get('port'));  
 });
 console.log('server running');
-
-
-// var server = app.listen(8090, function () {
-
-//     var host = server.address().address
-//     var port = server.address().port
-
-//     console.log("running", host, port)
-// })
