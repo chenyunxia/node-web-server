@@ -10,6 +10,8 @@ http.createServer(function (req, res){
 	console.log(path);
 	console.log(path.substr(1));
 
+	var type = path.substr(1).indexOf('');
+
 	// 从文件系统中读取请求的文件内容
 	fs.readFile(path.substr(1), function (err, data){
 		if(err){
@@ -17,7 +19,20 @@ http.createServer(function (req, res){
 			res.writeHead(404, {'Content-Type': 'text/plain'});
 		}else{
 
-			res.writeHead(200, {'Content-Type': 'text/html'});
+			// switch(type){
+   //              case ".html":
+   //                  res.writeHead(200, {"Content-Type": "text/html"});
+   //                  break;
+   //              case ".jpg":
+   //                  res.writeHead(200, {"Content-Type": "image/jpeg"});
+   //                  break;
+   //              case ".png":
+   //                  res.writeHead(200, {"Content-Type": "image/png"});
+   //                  break;
+   //              default:
+   //                  res.writeHead(200, {"Content-Type": "text/plain"});
+   //          }
+		    res.writeHead(200, {'Content-Type': 'text/plain'});
 			res.write(data);
 		}
 			
