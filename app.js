@@ -1,70 +1,73 @@
-var	http = require('http');
-var path = require('path');
-// var ejs = require('ejs');
-var staticPath = path.normalize('./public');
-// var server = http.createServer();
+var http = require('http'),
+	fs = require('fs'),
+	url = require('url');
 
-// var data = {
-// 	name: 'cyx'
-// }
+// url为list的时候，返回index页面
+var list = '/views/list.html';
+var error = '/views/error.html';
 
-// var str = '<html><body><h1>Hello, <%= name %>!</h1></body></html>';
+var getFiles = function(res, path){
 
-// server.on('request', function(req, res){
-	// var url = res.url;
-	// console.log(url)
+	var type = path.slice(path.lastIndexOf('.') + 1);
+	console.log(type);
 
-	// res.end(ejs.render(str, {name: 'cyx'}));
-// });
+	// 从文件系统中读取请求的文件内容
+	fs.readFile(path.substr(1), function (err, data){
+		if(err){
+			// console.log(err);
+			res.writeHead(404, {'Content-Type': 'text/plain'});
+		}else{
 
-// server.listen(8888);
+			// 打开不同的文件
+			switch (type)
+			{
+				case 'html':
+					res.writeHead(200, {'Content-Type': 'text/html'});
+				    break;
+				case 'jpg':
+					res.writeHead(200, {'Content-Type': 'image/jpeg'});
+				    break;
+				case 'png':
+					res.writeHead(200, {'Content-Type': 'image/png'});
+				    break;
+				case 'css':
+					res.writeHead(200, {'Content-Type': 'text/css'});
+				    break;
+			    case 'js':
+					res.writeHead(200, {'Content-Type': 'text/javascript'});
+				    break;
+				default:
+					res.writeHead(200, {'Content-Type': 'text/html'});
+			}
+			
+			res.write(data);
+		}
+			
+		// 发送响应数据
+		res.end();
+	})
+}
 
-http.createServer(function(req, res){
-	console.log('server start');
-	res.writeHead(200, {'Content-Type': 'text/plain'});
-	res.write('hello world');
-	res.end();
+// 创建服务
+http.createServer(function (req, res){
 
+	var reqUrl = req.url;
 
-}).listen(8888);
-console.log('server running');
+	// 有后缀名
+	if(reqUrl.indexOf('.') > -1){
+		getFiles(res, reqUrl);
+	}else{
 
+		console.log(reqUrl);
 
+		if(reqUrl == '/list'){
+			getFiles(res, list);
 
+		}else if(reqUrl == '/error'){
+			getFiles(res, error);
+		}
+	}
 
+}).listen(8090);
 
-
-
-
-
-
-
-
-	// express = require('express'),
-	// app = require('express')();
-
-
-// setting listening port
-// var server = app.listen(8090);
-// app.set('port', process.env.PORT || 9090);
-
-// 设置静态资源的目录，可同时设置多个目录，访问文件的时候会按照顺序进行查找
-// app.use(express.static('public'));
-// app.use(express.static('files'));
-
-
-// router list
-// app.get('/list', function(req, res){
-//   res.send({
-//     'code': '0',
-//     'msg': '成功',
-//     'data': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
-//   })
-// })
-
-
-// createServer
-// http.createServer(app).listen(app.get('port'), function(){  
-//   console.log('listening: ' + app.get('port'));  
-// });
-// console.log('server running');
+console.log('server running 8090');
